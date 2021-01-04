@@ -1,0 +1,39 @@
+{
+  "name": "@musicfox/mfcrypt",
+  "version": "0.0.1",
+  "description": "Cryptographic utility functionality for Musicfox JavaScript applications, interoptable with Python Flask services.",
+  "main": "index.js",
+  "dependencies": {
+    "crypto-js": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@testing-library/jest-dom": "^5.11.8",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.0",
+    "eslint-react": "0.0.4",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1"
+  },
+  "scripts": {
+    "build": "",
+    "start": "",
+    "test": "jest --coverage"
+  },
+  "keywords": [
+    "Cryptography",
+    "AES",
+    "PBKDF2",
+    "Multi-Layer",
+    "Encryption",
+    "Software",
+    "&",
+    "Application",
+    "Security"
+  ],
+  "author": "Jason R. Stevens, CFA on behalf of Musicfox, Inc.",
+  "license": "MIT"
+}

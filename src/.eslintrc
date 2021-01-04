@@ -1,0 +1,31 @@
+{
+  "extends": ["plugin:react/recommended", "plugin:prettier/recommended", "prettier"],
+  "settings": {
+    "react": {
+      "version": "16"
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "plugins": ["react", "prettier"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "rules": {
+    "react/prop-types": ["off"],
+    "prettier/prettier": ["error"],
+    "react/react-in-jsx-scope": ["off"],
+    "linebreak-style": ["error", "unix"], // change file to LF,
+  },
+  "globals": { "React": "writable" }
+}
