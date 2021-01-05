@@ -1,0 +1,40 @@
+# The github labeling workflow bot
+documentation:
+    - src/README.md
+    - src/*.md 
+
+test:
+    - src/__test__/* 
+    - src/test/*.test.js 
+    - src/test/*.py
+    - src/conftest.py
+
+packaging:
+    - examples/javascript/package.json
+
+build:
+    - src/dist/*.py
+    - src/js-dist/*.js
+
+configuration:
+    - examples/javascript/.storybook
+    - examples/javascript/.prettierrc.js
+    - examples/javascript/.eslintrc.js
+    - examples/javascript/.babelrc
+    - examples/javascript/package.json
+    - examples/javascript/postcss.config.js
+    - examples/javascript/tailwind.config.js
+    - src/javascript/.prettierrc.js
+    - src/javascript/.eslintrc.js
+    - src/javascript/.babelrc
+    - src/javascript/package.json
+    - src/conftest.py
+    - src/setup.py
+
+css:
+    - examples/javascript/styles/*
+    - examples/javascript/tailwind.config.js
+
+application:
+    - src/javascript/*.js
+    - src/mfcrypt/*.py

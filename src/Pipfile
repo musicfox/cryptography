@@ -1,0 +1,36 @@
+# -----------------------------------------------------------------------------
+# The default Musicfox Pipfile.
+# 
+# This should be customized per application requirements; uncomment or add
+# those packages required. This should be used for datascience, web, and
+# most other Python-based projects, replacing raw venv or anaconda usage.
+#
+# WARNING: You must have your FURY_TOKEN with read privileges in your
+# `pipenv install` environment prior to interaction with your Python environment.
+# For example, install with `FURY_TOKEN="<your_token>" pipenv install --dev`.
+# -----------------------------------------------------------------------------
+
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[[source]]
+url = "https://${FURY_TOKEN}:@pypi.fury.io/musicfox/"
+verify_ssl = true
+name = "fury"
+
+[dev-packages]
+ipython = "*"
+black = "==20.8b1"
+pytest = "*"
+pytest-flask = "*"
+twine = "*"
+
+[packages]
+flask = "*"
+pycryptodomex = "*"
+mfcrypt = { version = "*", index = "fury" }
+
+[requires]
+python_version = "3.9"
