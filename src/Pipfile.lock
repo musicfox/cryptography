@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0609004eaf35f815e61c6770ec778c6023d700a5e588cb62d5ff31ad6dbf2c15"
+            "sha256": "c2cc0b7737e7924c356c4d25e7b7908cbc641973568fdf38b2682cd84d04fbe4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -15,7 +15,7 @@
             },
             {
                 "name": "fury",
-                "url": "https://pypi.fury.io/musicfox/",
+                "url": "https://${FURY_TOKEN}:@pypi.fury.io/musicfox/",
                 "verify_ssl": true
             }
         ]
@@ -91,6 +91,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.1.1"
+        },
+        "mfcrypt": {
+            "hashes": [
+                "sha256:14ae70f54811f99d2b415590089ca47642cab9ccc5e9b56a279974b14c7c004b",
+                "sha256:364a52e066b724f2e83b581815bc738104f09e564b1378934a9e0f698f47185c"
+            ],
+            "index": "fury",
+            "version": "==0.0.1"
         },
         "pycryptodomex": {
             "hashes": [
