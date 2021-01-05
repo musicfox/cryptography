@@ -1,7 +1,7 @@
 # The github labeling workflow bot
 documentation:
     - src/README.md
-    - *.md 
+    - src/*.md 
 
 test:
     - src/__test__/* 
