@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1609816186064" clover="3.2.0">
-  <project timestamp="1609816186064" name="All files">
+<coverage generated="1609816241648" clover="3.2.0">
+  <project timestamp="1609816241648" name="All files">
     <metrics statements="12" coveredstatements="12" conditionals="6" coveredconditionals="6" methods="4" coveredmethods="4" elements="22" coveredelements="22" complexity="0" loc="12" ncloc="12" packages="1" files="1" classes="1"/>
     <file name="mfcrypt.js" path="/home/jason/repos/cryptography/src/javascript/mfcrypt.js">
       <metrics statements="12" coveredstatements="12" conditionals="6" coveredconditionals="6" methods="4" coveredmethods="4"/>
