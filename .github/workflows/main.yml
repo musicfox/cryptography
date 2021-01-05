@@ -25,10 +25,9 @@ jobs:
         run: |
             sudo add-apt-repository ppa:deadsnakes/ppa -y
             sudo apt-get update; sudo apt install software-properties-common && sudo apt install --no-install-recommends python3.9
-            python -m pip install --upgrade pip
-            pip install pipenv 
+            python3.9 -m pip install pipenv 
             pipenv install --dev 
-      - name: Test application units
-        run: $FURY_TOKEN pipenv run pytest -v 
         env: 
             FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
+      - name: Test application units
+        run: pipenv run pytest -v 
