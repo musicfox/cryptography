@@ -1,6 +1,6 @@
 import pytest
 from collections import namedtuple
-from python import mfcrypt
+import mfcrypt
 
 
 class TestData(

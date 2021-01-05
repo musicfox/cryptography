@@ -1,4 +1,4 @@
-from python import mfcrypt
+import mfcrypt
 
 
 def test_create_bytes_key(crypt_data):
