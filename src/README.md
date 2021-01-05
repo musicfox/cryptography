@@ -16,13 +16,21 @@ fan-b00st application usage.
 
 ## Installation
 
+### JavaScript
 Install via `npm` or `yarn`, e.g.
 
 `npm i --save-dev @musicfox/mfcrypt`.
 
 > &#128161 Remove `--save-dev` if this is an upstream dependency of your lib/app, rather thanone compiled.
 
-## Quick start
+### Python
+Install via [fury.io](https://fury.io). You'll need to populate your environment
+with a token via `FURY_TOKEN`, available within your fury account.
+
+`FURY_TOKEN="<your_token>" pipenv install --dev # assuming you're developing`
+> &#128161 Remove `--dev` if this is an upstream dependency of your lib/app, rather than your dev environment. 
+
+## Quick start JavaScript
 
 For detailed usage examine the code in `examples/javascript/` within the repo and the test suitefound in `src/test/`. 
 
@@ -40,8 +48,19 @@ const secretKeyBytes = await createBytesKey(mySecretPassphrase);
 const encStringData = await encrypt('TOP SECRET STRING DATA', secretKeyBytes);
 const decStringData = await decrypt(encStringData, secretKeyBytes, 'string'); // give it a type hint at the end, you'll be happy you did ;-)
 ```
+## Quick start Python
 
-### Over-the-wire
+For detailed usage examine the code in `examples/python`, which contains a Python Flask application you can test out. In addition, you can always examine usage via
+the test suite found in the `test` directory.
+
+```python
+import mfcrypt
+
+if __name__ == '__main__':
+    b_key = mfcrypt.create_bytes_key('your secret passphrase', 'your random salt')
+    print(b_key.hex())
+```
+#### Over-the-wire
 This particular implementation is meant to work with Python Flask-based HTTP webservices. As such, you should be able to use your code above to send encrypted data which may be decrypted
 via a Python service.
 
