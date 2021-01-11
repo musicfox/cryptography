@@ -70,7 +70,10 @@ File an issue or ask a question herein on our [Issues Board](https://github.com/
 
 ## Development
 
-Coming soon. 
+Check out this repository:
+`git clone git@githug.com:musicfox/cryptography && cd crypto/cryptography`
+
+All source is located in the `src` directory and language-specific, within the appropriate `Python` or `Javascript` directories. 
 
 ## Reference/Source Materials
 
