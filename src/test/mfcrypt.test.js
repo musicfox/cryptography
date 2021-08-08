@@ -1,9 +1,24 @@
 // crypt.test.js
-import {createBytesKey, decrypt, encrypt} from '../javascript/mfcrypt';
+import {
+  addSignature,
+  createBytesKey,
+  decrypt,
+  encrypt,
+} from '../javascript/mfcrypt';
 
 const secretKey = 'this is an amazing test passphrase';
 const salt = 'salt';
 
+describe('Test mfcrypt signing and signature verification functionality.', () => {
+  let testString = 'abcdefgh';
+  let passphrase = 'my passphrase';
+
+  test('Generate a signed base64 string', async () => {
+    const signedString = await addSignature(passphrase, testString);
+    expect(typeof signedString === 'string').toBe(true);
+    expect(signedString.length % 4 == 0).toBe(true);
+  });
+});
 describe('Test node.js cryptography functionality.', () => {
   let secretKeyBytes;
   test('Generate key given passphrase', async () => {
