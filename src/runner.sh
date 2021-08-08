@@ -10,7 +10,7 @@ echo
 echo "JavaScript testing completed. Starting Python tests now."
 echo
 echo
-pipenv run python -m pytest -vv
+pipenv run python -m pytest -vv --cov='./mfcrypt' --cov-branch
 echo
 echo
 echo "Python and JavaScript unit testing is complete."

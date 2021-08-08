@@ -1,7 +1,7 @@
 // index.jsx
 
 import React from "react";
-import { encrypt, createBytesKey } from "../../../src/javascript/mfcrypt";
+import { encrypt, createBytesKey } from "@musicfox/mfcrypt";
 
 export default function index(props) {
   const paragraphStyle = {
@@ -116,7 +116,7 @@ export async function getServerSideProps() {
   const res = await fetch(`${baseUrl}/decrypt?data=${encrypted}`, {
     method: "POST",
   });
-  let result;
+  let result = "";
   if (res.ok) {
     result = await res.text();
   }
