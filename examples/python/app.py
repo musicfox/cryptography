@@ -23,12 +23,17 @@ passphrase, salt = "a randomly generated string hash", "salt"
 
 @app.route("/", methods=["GET"])
 def ping():
+    """Ping the application to ensure it is up."""
     app.logger.debug(request.url)
     return make_response("Success!", 200)
 
 
 @app.route("/decrypt", methods=["POST"])
 def decrypt():
+    """A route to accept a query parameter `data` containing encrypted
+    data to decrypt.
+
+    Returns the decrypted value of the `data` parameter."""
     data = request.args.get("data")
     app.logger.debug(data)
     bin_key = mfcrypt.create_bytes_key(passphrase, salt)
@@ -41,6 +46,10 @@ def decrypt():
 
 @app.route("/encrypt", methods=["POST"])
 def encrypt():
+    """A route to accept a query parameter `data` containing plaintext to
+    encrypt.
+
+    Returns the encrypted value of the `data` parameter."""
     data = request.args.get("data")
     bin_key = mfcrypt.create_bytes_key(passphrase, salt, iterations=128)
     encrypted = mfcrypt.encrypt(data, bin_key).decode("utf-8")
