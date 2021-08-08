@@ -27,7 +27,7 @@ jobs:
             sudo apt install --no-install-recommends python3.9
             python3.9 -m pip install pipenv 
             pipenv install --dev 
-        env: 
-            FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
+      - name: Ensure code quality with Black
+        run: pipenv run black mfcrypt -l 79 --check
       - name: Test application units
-        run: pipenv run pytest -v 
+        run: pipenv run pytest -v
