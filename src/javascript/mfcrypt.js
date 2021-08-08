@@ -115,4 +115,22 @@ function isNotString(data) {
   return typeof data !== 'string';
 }
 
-export {createBytesKey, encrypt, decrypt};
+/**
+ * `addSignature`
+ *
+ * Signs the given data with the given key using
+ * the HMAC SHA1 digest, returning a Hexadecimal encoded string.
+ *
+ * @param
+ * `key` string key or passphrase
+ *
+ * @param
+ * `data` string encrypted (or unencrypted!) data to sign
+ *
+ * @returns signed string with Hexadecimal encoding
+ */
+function addSignature(key, data) {
+  return CryptoJS.HmacSHA256(data, key).toString(CryptoJS.enc.Hex);
+}
+
+export {createBytesKey, encrypt, decrypt, addSignature};
