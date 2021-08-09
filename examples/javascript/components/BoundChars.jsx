@@ -2,6 +2,8 @@
  * to display w/o css needs.
  *
  */
+import { paragraphStyle } from "../styles/index";
+
 export default function BoundChars(props) {
   const { text } = props;
   let result, supremum;
