@@ -1,6 +1,7 @@
 // crypt.test.js
 import {
   addSignature,
+  checkSignature,
   createBytesKey,
   decrypt,
   encrypt,
@@ -11,12 +12,16 @@ const salt = 'salt';
 
 describe('Test mfcrypt signing and signature verification functionality.', () => {
   let testString = 'abcdefgh';
-  let passphrase = 'my passphrase';
-
-  test('Generate a signed base64 string', async () => {
-    const signedString = await addSignature(passphrase, testString);
+  let signedString = '';
+  test('Generate a signed Hex string', async () => {
+    signedString = await addSignature(secretKey, testString);
     expect(typeof signedString === 'string').toBe(true);
-    expect(signedString.length % 4 == 0).toBe(true);
+  });
+  test('Match a signed Hex string', async () => {
+    const signedStringComp = await addSignature(secretKey, testString);
+    expect(await checkSignature(signedStringComp, secretKey, testString)).toBe(
+      true,
+    );
   });
 });
 describe('Test node.js cryptography functionality.', () => {
