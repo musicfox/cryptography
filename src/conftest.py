@@ -18,11 +18,11 @@ class TestData(
 
     @property
     def encrypted(self):
-        return self.encrypted_payload.split(b"::")[0]
+        return self.encrypted_payload.split("::")[0]
 
     @property
     def digest(self):
-        return self.encrypted_payload.split(b"::")[1]
+        return self.encrypted_payload.split("::")[1]
 
     @property
     def encrypted_object_data(self):
