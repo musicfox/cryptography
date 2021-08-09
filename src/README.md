@@ -70,17 +70,4 @@ via a Python service.
 
 ### Support
 
-File an issue or ask a question herein on our [Issues Board](https://github.com/musicfox/cryptography/issues). 
-
-## Development
-
-Check out this repository:
-`git clone git@githug.com:musicfox/cryptography && cd crypto/cryptography`
-
-All source is located in the `src` directory and language-specific, within the appropriate `Python` or `Javascript` directories. 
-
-## Reference/Source Materials
-
-As cryptography is a detailed, mission-critical application security subject please review the
-below references prior to usage of this library.
-
+File an issue or ask a question via [Github](https://github.com/musicfox/cryptography/issues). 
