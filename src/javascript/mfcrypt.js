@@ -129,8 +129,32 @@ function isNotString(data) {
  *
  * @returns signed string with Hexadecimal encoding
  */
-function addSignature(key, data) {
+async function addSignature(key, data) {
   return CryptoJS.HmacSHA256(data, key).toString(CryptoJS.enc.Hex);
 }
 
-export {createBytesKey, encrypt, decrypt, addSignature};
+/**
+ * `checkSignature`
+ *
+ * Given a key passphrase and data combination in addition to the supposed
+ * signed string digest return whether the digests are equal when recreated
+ * using `addSignature`.
+ *
+ * @param
+ * `signedString` string digest to comapre with that created by
+ * `addSignature(key, data)`
+ *
+ * @param
+ * `key` string key or passphrase
+ *
+ * @param
+ * `data` string data to sign
+ *
+ * @returns
+ * boolean True if the digest match otherwise False
+ */
+async function checkSignature(signedString, key, data) {
+  const digestToCompare = await addSignature(key, data);
+  return digestToCompare === signedString;
+}
+export {createBytesKey, encrypt, decrypt, addSignature, checkSignature};
