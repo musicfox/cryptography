@@ -47,14 +47,36 @@ describe('Test node.js cryptography functionality.', () => {
   test('Decrypt string, object, and mislabeled data', async () => {
     const encStringData = await encrypt('string test', secretKeyBytes);
     const encObjData = await encrypt({id: 'craziest'}, secretKeyBytes);
-    const encBadData = await encrypt({badVal: 1234}, secretKeyBytes);
-    const decStringData = await decrypt(encStringData, secretKeyBytes);
-    const decObjData = await decrypt(encObjData, secretKeyBytes, 'object');
-    const decBadData1 = await decrypt(encBadData, secretKeyBytes, 'array'); // not an array
-    const decBadData2 = await decrypt(encBadData, secretKeyBytes, 'string'); // not a string
-    expect(typeof decStringData === 'string').toBe(true);
-    expect(typeof decObjData === 'object').toBe(true);
-    expect(typeof decBadData1 === 'object').toBe(true);
-    expect(typeof decBadData2 === 'string').toBe(true);
+    try {
+      const encBadData = await encrypt({badVal: 1234}, secretKeyBytes);
+
+      const decStringData = await decrypt(encStringData, secretKeyBytes);
+      const decObjData = await decrypt(encObjData, secretKeyBytes, 'object');
+      try {
+        const decBadData1 = await decrypt(encBadData, secretKeyBytes, 'array'); // not an array
+
+        expect(typeof decBadData1 === 'object').toBe(true);
+      } catch (error) {
+        // console.log(`Expected error: ${error.message} in decrypting bad
+        // data`);
+      }
+      try {
+        const decBadData2 = await decrypt(encBadData, secretKeyBytes, 'string'); // not a string
+        expect(typeof decBadData2 === 'string').toBe(true);
+        await decrypt(
+          // this will throw!
+          'blah blah break me::notahash',
+          secretKeyBytes,
+          'string',
+        );
+      } catch (error) {
+        // console.log(`Expected error: ${error.message} in decrypting bad
+        // data`);
+      } finally {
+        expect(typeof decStringData === 'string').toBe(true);
+        expect(typeof decObjData === 'object').toBe(true);
+      }
+    } finally {
+    }
   });
 });
