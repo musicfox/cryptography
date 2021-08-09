@@ -13,12 +13,20 @@ class TestData(
         return mfcrypt.create_bytes_key(self.passphrase, self.salt)
 
     @property
+    def encrypted_payload(self):
+        return mfcrypt.encrypt(self.plaintext, self.passphrase, self.salt)
+
+    @property
     def encrypted(self):
-        return mfcrypt.encrypt(self.plaintext, self.bin_key)
+        return self.encrypted_payload.split(b"::")[0]
+
+    @property
+    def digest(self):
+        return self.encrypted_payload.split(b"::")[1]
 
     @property
     def encrypted_object_data(self):
-        return mfcrypt.encrypt(self.obj_data, self.bin_key)
+        return mfcrypt.encrypt(self.obj_data, self.passphrase, self.salt)
 
     def __str__(self):
         return f"crypt_data: passphrase = {passphrase} salt = {salt}"
@@ -51,5 +59,10 @@ def obj_data():
 
 
 @pytest.fixture(scope="module")
-def crypt_data(passphrase, salt, plaintext, obj_data):
+def crypt_data(
+    passphrase,
+    salt,
+    plaintext,
+    obj_data,
+):
     return TestData(passphrase, salt, plaintext, obj_data)
