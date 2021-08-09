@@ -30,17 +30,21 @@ def test_convert_to_bytes():
 
 
 def test_add_signature_hmac_sha256(crypt_data):
-    test_hash = mfcrypt.add_signature(crypt_data.bin_key, crypt_data.plaintext)
+    test_hash = mfcrypt.add_signature(
+        crypt_data.passphrase, crypt_data.encrypted
+    )
     assert isinstance(test_hash, str)
     assert test_hash != mfcrypt.add_signature(
-        b"not the right key", crypt_data.plaintext
+        "not the right key", crypt_data.encrypted
     )
 
 
 def test_check_signature_hmac_sha256(crypt_data):
-    test_hash = mfcrypt.add_signature(crypt_data.bin_key, crypt_data.plaintext)
+    test_hash = mfcrypt.add_signature(
+        crypt_data.passphrase, crypt_data.plaintext
+    )
     mfcrypt.check_signature(
-        test_hash, crypt_data.bin_key, crypt_data.plaintext
+        test_hash, crypt_data.passphrase, crypt_data.plaintext
     )
 
 
@@ -52,16 +56,20 @@ def test_create_bytes_key(crypt_data):
 
 
 def test_encrypt_string(crypt_data):
-    encrypted = mfcrypt.encrypt(crypt_data.plaintext, crypt_data.bin_key)
-    assert isinstance(encrypted, bytes)
+    encrypted = mfcrypt.encrypt(
+        crypt_data.plaintext, crypt_data.passphrase, crypt_data.salt
+    )
+    assert isinstance(encrypted, str)
     assert encrypted != crypt_data.plaintext
-    assert encrypted == crypt_data.encrypted
+    assert encrypted == crypt_data.encrypted_payload
     assert len(encrypted)
 
 
 def test_encrypt_dict(crypt_data):
-    encrypted = mfcrypt.encrypt(crypt_data.obj_data, crypt_data.bin_key)
-    assert isinstance(encrypted, bytes)
+    encrypted = mfcrypt.encrypt(
+        crypt_data.obj_data, crypt_data.passphrase, crypt_data.salt
+    )
+    assert isinstance(encrypted, str)
     assert encrypted != crypt_data.obj_data
     assert encrypted == crypt_data.encrypted_object_data
     assert len(encrypted)
@@ -70,8 +78,10 @@ def test_encrypt_dict(crypt_data):
 def test_encrypt_bytearray(crypt_data):
     encoded = bytearray(crypt_data.plaintext.encode("utf-8"))
     try:
-        encrypted = mfcrypt.encrypt(encoded, crypt_data.bin_key)
-        assert isinstance(encrypted, bytes)
+        encrypted = mfcrypt.encrypt(
+            encoded, crypt_data.passphrase, crypt_data.salt
+        )
+        assert isinstance(encrypted, str)
         assert encrypted != crypt_data.plaintext.encode("utf-8")
         assert encrypted == crypt_data.encrypted
         assert len(encrypted)
@@ -91,7 +101,9 @@ def test_encrypt_bytearray(crypt_data):
 
     try:
         wnw = WillNotWork()
-        encrypted = mfcrypt.encrypt(wnw, crypt_data.bin_key)
+        encrypted = mfcrypt.encrypt(
+            wnw, crypt_data.passphrase, crypt_data.salt
+        )
         assert isinstance(encrypted, bytes)
         assert encrypted != crypt_data.plaintext.encode("utf-8")
         assert encrypted == crypt_data.encrypted
@@ -104,7 +116,10 @@ def test_encrypt_bytearray(crypt_data):
 
 def test_decrypt_string(crypt_data):
     decrypted = mfcrypt.decrypt(
-        crypt_data.encrypted, crypt_data.bin_key, type_hint="string"
+        crypt_data.encrypted_payload,
+        crypt_data.passphrase,
+        crypt_data.salt,
+        type_hint="string",
     )
     assert isinstance(decrypted, str)
     assert decrypted == crypt_data.plaintext
@@ -113,7 +128,10 @@ def test_decrypt_string(crypt_data):
 def test_decrypt_string_bad_hash(crypt_data):
     try:
         decrypted = mfcrypt.decrypt(
-            b"random-badness::notahash", crypt_data.bin_key, type_hint="string"
+            b"random-badness::notahash",
+            crypt_data.passphrase,
+            crypt_data.salt,
+            type_hint="string",
         )
     except ValueError as verr:
         assert "Hash comparison failed" in f"{verr}"
@@ -122,7 +140,8 @@ def test_decrypt_string_bad_hash(crypt_data):
 def test_decrypt_dict(crypt_data):
     decrypted = mfcrypt.decrypt(
         crypt_data.encrypted_object_data,
-        crypt_data.bin_key,
+        crypt_data.passphrase,
+        crypt_data.salt,
         type_hint="dict",
     )
     assert isinstance(decrypted, dict)
