@@ -3,6 +3,12 @@ import CryptoJS from 'crypto-js';
 /**
  * `encrypt(message, secretKey)`
  *
+ * Encrypt the given message with the given secret key.
+ *
+ * This method first encrypts the given message and then computes
+ * the HMAC digest via the `addSignature` method. This digest is
+ * concatentated to the end of the encrypted message to verify authenticity.
+ *
  * @param
  * `message` encrypted string or object to be decrypted
  * @param
@@ -30,16 +36,28 @@ import CryptoJS from 'crypto-js';
 async function encrypt(data, secretKeyBytes) {
   const iv = CryptoJS.enc.Hex.parse(secretKeyBytes.toString().slice(0, 32));
   const key = CryptoJS.enc.Hex.parse(secretKeyBytes.toString().slice(32, 96));
+  let encrypted;
   if (isNotString(data)) {
-    return CryptoJS.AES.encrypt(JSON.stringify(data), key, {
+    encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), key, {
       iv: iv,
     }).toString();
-  } else return CryptoJS.AES.encrypt(data, key, {iv: iv}).toString();
+  } else encrypted = CryptoJS.AES.encrypt(data, key, {iv: iv}).toString();
+  const digest = await addSignature(secretKeyBytes, encrypted);
+  return `${encrypted}::${digest}`;
 }
 
 /**
  * `decrypt(data, secretKey, typeHint = 'string')`
  *
+ * This method returns plaintext data, given encrypted data and a key
+ * used for the original encryption. It first computes the HMAC digest
+ * for authenticity and then decrypts data.
+ *
+ * If the encrypted message is valid, this method will
+ * automatically compute/compare the digest using the known (shared) key.
+ * If valid, decryption will ensue and return the encrypted message in
+ * plaintext.
+
  * @param
  * `data` encrypted string or object to be decrypted.
  * @param
@@ -63,14 +81,25 @@ async function encrypt(data, secretKeyBytes) {
  * ```
  */
 async function decrypt(data, secretKeyBytes, typeHint = 'string') {
+  const endEqIdx = data.indexOf('::');
+  const digest = data.substring(endEqIdx).replace('::', '');
+  const encdata = data.substring(0, endEqIdx);
+  const isAuthentic = await checkSignature(digest, secretKeyBytes, encdata);
+  if (!isAuthentic) {
+    console.log(`data: ${data}`);
+    console.log(`endEqIdx: ${endEqIdx}`);
+    console.log(`digest: ${digest}`);
+    console.log(`encdata: ${encdata}`);
+    throw new Error('HMAC digest did not compute as authentic.');
+  }
   const iv = CryptoJS.enc.Hex.parse(secretKeyBytes.toString().slice(0, 32));
   const key = CryptoJS.enc.Hex.parse(secretKeyBytes.toString().slice(32, 96));
   if (typeHint !== 'string') {
     return JSON.parse(
-      CryptoJS.AES.decrypt(data, key, {iv: iv}).toString(CryptoJS.enc.Utf8),
+      CryptoJS.AES.decrypt(encdata, key, {iv: iv}).toString(CryptoJS.enc.Utf8),
     );
   } else {
-    return CryptoJS.AES.decrypt(data, key, {iv: iv}).toString(
+    return CryptoJS.AES.decrypt(encdata, key, {iv: iv}).toString(
       CryptoJS.enc.Utf8,
     );
   }
@@ -115,4 +144,46 @@ function isNotString(data) {
   return typeof data !== 'string';
 }
 
-export {createBytesKey, encrypt, decrypt};
+/**
+ * `addSignature`
+ *
+ * Signs the given data with the given key using
+ * the HMAC SHA1 digest, returning a Hexadecimal encoded string.
+ *
+ * @param
+ * `key` string key or passphrase
+ *
+ * @param
+ * `data` string encrypted (or unencrypted!) data to sign
+ *
+ * @returns signed string with Hexadecimal encoding
+ */
+async function addSignature(key, data) {
+  return CryptoJS.HmacSHA256(data, key).toString(CryptoJS.enc.Hex);
+}
+
+/**
+ * `checkSignature`
+ *
+ * Given a key passphrase and data combination in addition to the supposed
+ * signed string digest return whether the digests are equal when recreated
+ * using `addSignature`.
+ *
+ * @param
+ * `signedString` string digest to comapre with that created by
+ * `addSignature(key, data)`
+ *
+ * @param
+ * `key` string key or passphrase
+ *
+ * @param
+ * `data` string data to sign
+ *
+ * @returns
+ * boolean True if the digest match otherwise False
+ */
+async function checkSignature(signedString, key, data) {
+  const digestToCompare = await addSignature(key, data);
+  return digestToCompare === signedString;
+}
+export {createBytesKey, encrypt, decrypt, addSignature, checkSignature};
