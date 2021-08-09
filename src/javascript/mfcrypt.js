@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js';
 
 /**
- * `encrypt(message, secretKey)`
+ * `encrypt(data, passphrase, salt)`
  *
  * Encrypt the given message with the given secret key.
  *
@@ -10,30 +10,37 @@ import CryptoJS from 'crypto-js';
  * concatentated to the end of the encrypted message to verify authenticity.
  *
  * @param
- * `message` encrypted string or object to be decrypted
+ * `data` encrypted string or object to be decrypted
+ *
  * @param
- * `secretKeyBytes` bytes representation of password/key*
+ * `passphrase` string password/key
+ *
+ * @param
+ * `salt` string random salt
  *
  * @returns
  * `string` encrypted text
  *
  * @example
  * ```js
- * import { encrypt } from 'crypt'
- *
+ * import { encrypt } from 'mfcrypt'
+ * // Developer todo: define passphrase and salt strings*
  * // encrypt a string
  * const encryptedStringData = await encrypt(
  *   "this is your string to encrypt",
- *   secretKey
+ *   "a secret passphrase",
+ *   "a random salt",
  * );
  * // encrypt an object -- you'll get a string back
  * const encryptedObjectData = await encrypt(
  *   {objKey: "this is your object toencrypt"},
- *   secretKey,
+ *   "a secret passphrase",
+ *   "a random salt",
  * );
  * ```
  */
-async function encrypt(data, secretKeyBytes) {
+async function encrypt(data, passphrase, salt) {
+  const secretKeyBytes = await createBytesKey(passphrase, salt);
   const iv = CryptoJS.enc.Hex.parse(secretKeyBytes.toString().slice(0, 32));
   const key = CryptoJS.enc.Hex.parse(secretKeyBytes.toString().slice(32, 96));
   let encrypted;
@@ -42,7 +49,7 @@ async function encrypt(data, secretKeyBytes) {
       iv: iv,
     }).toString();
   } else encrypted = CryptoJS.AES.encrypt(data, key, {iv: iv}).toString();
-  const digest = await addSignature(secretKeyBytes, encrypted);
+  const digest = await addSignature(passphrase, encrypted);
   return `${encrypted}::${digest}`;
 }
 
@@ -60,8 +67,13 @@ async function encrypt(data, secretKeyBytes) {
 
  * @param
  * `data` encrypted string or object to be decrypted.
+ *
  * @param
- * `secretKey` string password/key.
+ * `passphrase` string password/key
+ *
+ * @param
+ * `salt` string random salt
+ *
  * @param
  * `typeHint` string representing a "typeof" type, defaults to 'string'. See
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof
@@ -73,23 +85,21 @@ async function encrypt(data, secretKeyBytes) {
  *
  * @example
  * ```js
+ * // Developer todo: define passphrase and salt strings
  * // plaintext string
- * const decStringData = await decrypt(encryptedStringData, secretKey);
+ * const decStringData = await decrypt(encryptedStringData, passphrase, salt);
  * // object
- * const decObjectData = await decrypt(encryptedObjectData, secretKey, typeHint
- * = 'object');
+ * const decObjectData = await decrypt(encryptedObjectData, passphrase, salt,
+ typeHint= 'object');
  * ```
  */
-async function decrypt(data, secretKeyBytes, typeHint = 'string') {
+async function decrypt(data, passphrase, salt, typeHint = 'string') {
+  const secretKeyBytes = await createBytesKey(passphrase, salt);
   const endEqIdx = data.indexOf('::');
   const digest = data.substring(endEqIdx).replace('::', '');
   const encdata = data.substring(0, endEqIdx);
-  const isAuthentic = await checkSignature(digest, secretKeyBytes, encdata);
+  const isAuthentic = await checkSignature(digest, passphrase, encdata);
   if (!isAuthentic) {
-    console.log(`data: ${data}`);
-    console.log(`endEqIdx: ${endEqIdx}`);
-    console.log(`digest: ${digest}`);
-    console.log(`encdata: ${encdata}`);
     throw new Error('HMAC digest did not compute as authentic.');
   }
   const iv = CryptoJS.enc.Hex.parse(secretKeyBytes.toString().slice(0, 32));
