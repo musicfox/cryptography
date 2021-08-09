@@ -36,8 +36,7 @@ def decrypt():
     Returns the decrypted value of the `data` parameter."""
     data = request.args.get("data")
     app.logger.debug(data)
-    bin_key = mfcrypt.create_bytes_key(passphrase, salt)
-    decrypted = mfcrypt.decrypt(data, bin_key)
+    decrypted = mfcrypt.decrypt(data, passphrase, salt)
     return make_response(
         decrypted,
         200,
@@ -51,8 +50,7 @@ def encrypt():
 
     Returns the encrypted value of the `data` parameter."""
     data = request.args.get("data")
-    bin_key = mfcrypt.create_bytes_key(passphrase, salt, iterations=128)
-    encrypted = mfcrypt.encrypt(data, bin_key).decode("utf-8")
+    encrypted = mfcrypt.encrypt(data, passphrase, salt).decode("utf-8")
     app.logger.debug(
         f"Decrypt via a POST request to the following URI:\n{request.base_url.replace('encrypt', 'decrypt')}?data={encrypted}\n"
     )

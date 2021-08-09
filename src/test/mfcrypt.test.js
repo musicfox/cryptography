@@ -9,7 +9,7 @@ import {
 
 const secretKey = 'this is an amazing test passphrase';
 const salt = 'salt';
-
+const passphrase = secretKey;
 describe('Test mfcrypt signing and signature verification functionality.', () => {
   let testString = 'abcdefgh';
   let signedString = '';
@@ -33,45 +33,51 @@ describe('Test node.js cryptography functionality.', () => {
   });
 
   test('Encrypt string data.', async () => {
-    const encStringData = await encrypt('string test', secretKeyBytes);
+    const encStringData = await encrypt('string test', passphrase, salt);
     expect(typeof encStringData === 'string').toBe(true);
   });
 
   test('Encrypt object data.', async () => {
-    const encObjData = await encrypt({id: 'craziest'}, secretKeyBytes);
-    const encBadData = await encrypt({badVal: 1234}, secretKeyBytes);
+    const encObjData = await encrypt({id: 'craziest'}, passphrase, salt);
+    const encBadData = await encrypt({badVal: 1234}, passphrase, salt);
 
     expect(typeof encObjData === 'string').toBe(true);
     expect(typeof encBadData === 'string').toBe(true);
   });
   test('Decrypt string, object, and mislabeled data', async () => {
-    const encStringData = await encrypt('string test', secretKeyBytes);
-    const encObjData = await encrypt({id: 'craziest'}, secretKeyBytes);
+    const encStringData = await encrypt('string test', passphrase, salt);
+    const encObjData = await encrypt({id: 'craziest'}, passphrase, salt);
     try {
-      const encBadData = await encrypt({badVal: 1234}, secretKeyBytes);
+      const encBadData = await encrypt({badVal: 1234}, passphrase, salt);
 
-      const decStringData = await decrypt(encStringData, secretKeyBytes);
-      const decObjData = await decrypt(encObjData, secretKeyBytes, 'object');
+      const decStringData = await decrypt(encStringData, passphrase, salt);
+      const decObjData = await decrypt(encObjData, passphrase, salt, 'object');
       try {
-        const decBadData1 = await decrypt(encBadData, secretKeyBytes, 'array'); // not an array
+        const decBadData1 = await decrypt(
+          encBadData,
+          passphrase,
+          salt,
+          'array',
+        ); // not an array
 
         expect(typeof decBadData1 === 'object').toBe(true);
-      } catch (error) {
-        // console.log(`Expected error: ${error.message} in decrypting bad
-        // data`);
-      }
+      } catch (error) {}
       try {
-        const decBadData2 = await decrypt(encBadData, secretKeyBytes, 'string'); // not a string
+        const decBadData2 = await decrypt(
+          encBadData,
+          passphrase,
+          salt,
+          'string',
+        ); // not a string
         expect(typeof decBadData2 === 'string').toBe(true);
         await decrypt(
           // this will throw!
           'blah blah break me::notahash',
-          secretKeyBytes,
+          passphrase,
+          salt,
           'string',
         );
       } catch (error) {
-        // console.log(`Expected error: ${error.message} in decrypting bad
-        // data`);
       } finally {
         expect(typeof decStringData === 'string').toBe(true);
         expect(typeof decObjData === 'object').toBe(true);

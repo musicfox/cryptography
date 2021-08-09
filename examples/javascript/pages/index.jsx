@@ -2,47 +2,11 @@
 
 import React from "react";
 import DisplayPiGif from "../components/DisplayPiGif";
-import { encrypt, createBytesKey } from "@musicfox/mfcrypt";
+import BoundChars from "../components/BoundChars";
+import { encrypt } from "@musicfox/mfcrypt";
+
 import { containerStyle, paragraphStyle } from "../styles/index.js";
 
-/** Unecessary func to attempt a random cut off for the encrypted string
- * to display w/o css needs.
- *
- */
-function BoundChars(props) {
-  const { text } = props;
-  let result, supremum;
-  let displayArray = [];
-  const count = props?.characters ? props.characters : 40;
-  for (let i = 0; i < text.length; i += count) {
-    supremum = i + count;
-    result = supremum > text.length ? text.slice(i) : text.slice(i, supremum);
-    displayArray.push(
-      <p
-        style={{
-          backgroundColor: "#000000",
-          ...paragraphStyle,
-          margin: "0",
-          padding: ".41rem 0",
-          justifyContent: "space-around",
-        }}
-        key={i}
-      >
-        <code style={{ color: "#999999", backgroundColor: "#000000" }}>
-          {result}
-        </code>
-      </p>
-    );
-  }
-  return (
-    <span
-      style={{ backgroundColor: "black" }}
-      id="encrypted-token-display-chunks"
-    >
-      {displayArray}
-    </span>
-  );
-}
 export default function index(props) {
   return (
     <>
@@ -86,10 +50,8 @@ export async function getServerSideProps() {
   // your text to encrypt
   const plaintext =
     "Trump fumbled COVID. Shhh! No one should know this. TOP SECRET!";
-  // create your key in bytes
-  const binKey = await createBytesKey(passphrase, salt);
   // encrypt the plaintext using your bytes key
-  const encrypted = await encrypt(plaintext, binKey);
+  const encrypted = await encrypt(plaintext, passphrase, salt);
   // construct the url and hit the Python server to decrypt
   const url = new URL(
     `${baseUrl}/decrypt?data=${encodeURIComponent(encrypted)}`
