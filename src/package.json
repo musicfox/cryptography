@@ -1,6 +1,6 @@
 {
   "name": "@musicfox/mfcrypt",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Cryptographic utility functionality for Musicfox JavaScript applications, interoptable with Python Flask services.",
   "repository": "https://github.com/musicfox/cryptography",
   "main": "js-dist/mfcrypt.js",
