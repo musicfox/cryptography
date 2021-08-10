@@ -12,6 +12,6 @@
 #                                             \______/ \__|
 #
 #
-VERSION = (0, 0, '5a')
+VERSION = (0, 0, 6)
 
 __version__ = ".".join(map(str, VERSION))
