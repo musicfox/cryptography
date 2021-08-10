@@ -25,7 +25,7 @@ pytest-flask = "*"
 [packages]
 pycryptodomex = "*"
 flask = "*"
-mfcrypt = "==0.0.5a0"
+mfcrypt = "==0.0.6"
 
 [requires]
 python_version = "3.9"
