@@ -15,7 +15,7 @@ from setuptools.command.egg_info import egg_info
 # Package meta-data.
 NAME = "mfcrypt"
 DESCRIPTION = "Cryptographic utilities for Musicfox Python applications."
-URL = "https://github.com/cryptography/"
+URL = "https://github.com/musicfox/cryptography/"
 EMAIL = "dev@musicfox.io"
 LICENSE = "MIT"
 AUTHOR = "Jason R. Stevens, CFA on behalf of Musicfox, Inc."
