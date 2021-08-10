@@ -1,4 +1,7 @@
 .pytest_cache
+dist
+javascript
+MANIFEST.in
 test
 Pipfile
 runner.sh
